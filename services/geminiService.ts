@@ -29,7 +29,7 @@ Maintain a scholarly, wise, and encouraging tone.
 export async function islamicSearch(query: string): Promise<SearchResponse> {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-1.5-flash",
       contents: query,
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
@@ -39,7 +39,7 @@ export async function islamicSearch(query: string): Promise<SearchResponse> {
 
     const answer = response.text || "I apologize, but I could not find a clear answer in the tradition at this time.";
     const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-    
+
     const sources = chunks
       .filter((chunk: any) => chunk.web)
       .map((chunk: any) => ({
