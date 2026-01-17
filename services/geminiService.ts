@@ -33,6 +33,12 @@ const model = genAI.getGenerativeModel({
 
 export async function islamicSearch(query: string): Promise<SearchResponse> {
   try {
+
+    console.log("Attempting Gemini Request with Model:", "gemini-1.5-flash");
+    if (!process.env.GEMINI_API_KEY) {
+      console.error("CRITICAL: GEMINI_API_KEY is missing or empty!");
+    }
+
     const result = await model.generateContent(query);
     const response = await result.response;
     const answer = response.text() || "I apologize, but I could not find a clear answer in the tradition at this time.";
@@ -49,10 +55,21 @@ export async function islamicSearch(query: string): Promise<SearchResponse> {
       sources,
       isIslamic
     };
-  } catch (error) {
-    console.error("Gemini API Error:", error);
+  } catch (error: any) {
+    console.error("Gemini API Verification Error:", error);
+    console.log("Full Error Details:", JSON.stringify(error, null, 2));
+
+    // Check for specific error types to give better feedback
+    let userMessage = "A connection error occurred. Please try your search for wisdom again.";
+
+    if (error.message?.includes("API key")) {
+      userMessage = "Configuration Error: API Key is missing or invalid.";
+    } else if (error.message?.includes("fetch")) {
+      userMessage = "Network Error: Could not reach Google AI servers.";
+    }
+
     return {
-      answer: "A connection error occurred. Please try your search for wisdom again.",
+      answer: userMessage,
       sources: [],
       isIslamic: true
     };
