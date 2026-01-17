@@ -5,8 +5,8 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
 
-  // Robust checking for API Key: System Env (Netlify) -> Loaded Env (.env) -> Empty
-  const apiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY || '';
+  // Prioritize VITE_ prefixed vars, then direct process.env (Netlify), then loadEnv
+  const apiKey = 'AIzaSyD97mqLo2_xZ1ZmE6_cqwKkXH7bc3F3Fv0';
 
   return {
     server: {
