@@ -26,9 +26,9 @@ Maintain a scholarly, wise, and encouraging tone.
 
 // Initialize the API client (Web compatible)
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-// Use specific version -001 to avoid alias resolution issues
+// Use "gemini-pro" as it is confirmed available on this key
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash-001",
+  model: "gemini-pro",
   systemInstruction: SYSTEM_INSTRUCTION
 });
 
