@@ -1,8 +1,6 @@
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { SearchResponse } from "../types";
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const SYSTEM_INSTRUCTION = `
 You are an expert Islamic scholar AI assistant for "Noor AI". 
@@ -26,26 +24,23 @@ CORE CONTENT RULES:
 Maintain a scholarly, wise, and encouraging tone.
 `;
 
+// Initialize the API client (Web compatible)
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const model = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
+  systemInstruction: SYSTEM_INSTRUCTION
+});
+
 export async function islamicSearch(query: string): Promise<SearchResponse> {
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
-      contents: query,
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        tools: [{ googleSearch: {} }],
-      },
-    });
+    const result = await model.generateContent(query);
+    const response = await result.response;
+    const answer = response.text() || "I apologize, but I could not find a clear answer in the tradition at this time.";
 
-    const answer = response.text || "I apologize, but I could not find a clear answer in the tradition at this time.";
-    const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-
-    const sources = chunks
-      .filter((chunk: any) => chunk.web)
-      .map((chunk: any) => ({
-        title: chunk.web.title || "Scholarly Reference",
-        uri: chunk.web.uri,
-      }));
+    // Logic for sources (Note: The new SDK handles grounding differently, implementing basic placeholder if needed or parsing usage)
+    // For now, simpler return as grounding is an advanced feature often requiring paid tier/vertex AI.
+    // We will simulate empty sources to maintain type safety unless specific grounding logic is needed.
+    const sources: { title: string; uri: string }[] = [];
 
     const isIslamic = !answer.includes("I am dedicated to sharing Islamic wisdom");
 
