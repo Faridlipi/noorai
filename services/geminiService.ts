@@ -28,10 +28,10 @@ Maintain a scholarly, wise, and encouraging tone.
 const GENERIC_KEY = 'AIzaSyD97mqLo2_xZ1ZmE6_cqwKkXH7bc3F3Fv0';
 const genAI = new GoogleGenerativeAI(GENERIC_KEY);
 
-// Valid models for this key: gemini-2.0-flash-exp, gemini-2.5-flash
-// Using gemini-2.0-flash-exp as it is confirmed available in the list
+// Valid models for this key: gemini-flash-latest, gemini-pro-latest
+// Using gemini-flash-latest (Standard Tier) to avoid "Limit: 0" quota errors on experimental models
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.0-flash-exp",
+  model: "gemini-flash-latest",
   systemInstruction: SYSTEM_INSTRUCTION
 });
 
