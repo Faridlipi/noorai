@@ -65,7 +65,9 @@ export async function islamicSearch(query: string): Promise<SearchResponse> {
     if (error.message?.includes("API key")) {
       userMessage = "Configuration Error: API Key is missing or invalid.";
     } else if (error.message?.includes("fetch")) {
-      userMessage = "Network Error: Could not reach Google AI servers.";
+      // Add key length debugging to the UI
+      const keyLen = process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.length : 0;
+      userMessage = `Network Error: Could not reach servers. (Key ID: ${keyLen})`;
     }
 
     return {
